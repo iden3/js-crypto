@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+        content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+    <script src="./dist/umd/IdenJsCrypto.js"></script>
+    <title>Test</title>
+</head>
+
+<body>
+    Test browser
+</body>
+<script>
+    const { poseidon, PrivateKey, Signature, utils, ffUtils } = IdenJsCrypto;
+    const msgBuf = utils.fromHexString('000102030405060708090000');
+    const msg = ffUtils.leBuff2int(msgBuf);
+
+    const skBuff = utils.fromHexString('0001020304050607080900010203040506070809000102030405060708090001');
+
+    const privateKey = new PrivateKey(skBuff);
+
+    const pubKey = privateKey.public();
+
+    const pPubKey = pubKey.compress();
+    console.log(pPubKey);
+
+    const signature = privateKey.signPoseidon(msg);
+
+
+    const pSignature = signature.compress();
+
+    const uSignature = Signature.newFromCompressed(pSignature);
+
+    console.log(pubKey.verifyPoseidon(msg, uSignature));
+</script>
+
+</html>

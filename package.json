@@ -1,0 +1,51 @@
+{
+  "name": "@iden3/js-crypto",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/umd/IdenJsCrypto.js",
+  "module": "dist/esm/index.js",
+  "source": "./src/index.ts",
+  "typings": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run build:esm && npm run build:umd && npm run build:tsc",
+    "build:esm": "node ./scripts/esm.config.js",
+    "build:umd": "node ./scripts/umd.config.js",
+    "build:tsc": "tsc --module commonjs",
+    "clean": "rimraf ./dist",
+    "test": "jest",
+    "lint": "eslint --fix --ext .js,.ts src/**",
+    "format": "prettier --config .prettierrc './**/*.ts' --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iden3/js-crypto.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iden3/js-crypto/issues"
+  },
+  "homepage": "https://github.com/iden3/js-crypto#readme",
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@types/jest": "^29.2.3",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "esbuild": "^0.15.15",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.3.1",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "blake-hash": "^2.0.0",
+    "ffjavascript": "^0.2.57"
+  }
+}

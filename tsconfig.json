@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "esnext",
+    "module": "es6",
+    "lib": ["esnext"],
+    "allowJs": true,
+    "esModuleInterop": true,
+
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+//    "noImplicitAny": false,
+    "declarationDir": "dist/types",
+    "outDir": "dist/cjs",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src"
+  ]
+}
