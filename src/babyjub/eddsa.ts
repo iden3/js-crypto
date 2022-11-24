@@ -1,6 +1,6 @@
 // @ts-ignore
 import createBlakeHash from 'blake-hash';
-import { toHexString } from './utils';
+import { Hex } from '../hex';
 import { babyJub, BabyJub } from './babyjub';
 import { poseidon, Poseidon } from '../poseidon';
 import { F1Field, Scalar, utils } from '../ff';
@@ -26,7 +26,7 @@ export class Eddsa {
 
   prv2pub(prv: Uint8Array): [bigint, bigint] {
     const F = this.babyJub.F;
-    const privHex = toHexString(prv);
+    const privHex = Hex.encodeString(prv);
     const sBuff = this.pruneBuffer(createBlakeHash('blake512').update(privHex, 'hex').digest());
 
     const s = Scalar.fromRprLE(sBuff, 0, 32);
@@ -35,7 +35,7 @@ export class Eddsa {
   }
 
   signPoseidon(prv: Uint8Array, msg: bigint) {
-    const privateHex = toHexString(prv);
+    const privateHex = Hex.encodeString(prv);
     const h1 = createBlakeHash('blake512').update(privateHex, 'hex').digest();
 
     const sBuff = this.pruneBuffer(h1.slice(0, 32));
@@ -48,7 +48,7 @@ export class Eddsa {
     composeBuff.set(h1.slice(32, 64), 0);
     composeBuff.set(msgBuff, 32);
 
-    const rBuff = createBlakeHash('blake512').update(toHexString(composeBuff), 'hex').digest();
+    const rBuff = createBlakeHash('blake512').update(Hex.encodeString(composeBuff), 'hex').digest();
     let r = utils.leBuff2int(rBuff);
     const Fr = new F1Field(babyJub.subOrder);
     r = Fr.e(r);
@@ -84,7 +84,7 @@ export class Eddsa {
     return true;
   }
 
-  packSignature(sig: Signature) {
+  packSignature(sig: Signature): Uint8Array {
     const buff = new Uint8Array(64);
     const R8p = this.babyJub.packPoint(sig.R8);
     buff.set(R8p, 0);

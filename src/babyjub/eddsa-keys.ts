@@ -1,5 +1,6 @@
 import { babyJub } from './babyjub';
 import { eddsa } from './eddsa';
+import { Hex } from '../hex';
 
 export class Signature {
   R8: [bigint, bigint];
@@ -28,6 +29,10 @@ export class Signature {
   toString(): string {
     return this.compress().toString();
   }
+  
+  hex(): string {
+    return Hex.encodeString(this.compress());
+  }
 }
 
 export class PublicKey {
@@ -48,6 +53,11 @@ export class PublicKey {
     }
     return new PublicKey(p);
   }
+  
+  static newFromHex(hexStr: string): PublicKey {
+    const buff = Hex.decodeString(hexStr);
+    return PublicKey.newFromCompressed(buff);
+  }
 
   compress(): Uint8Array {
     // return utils.swapEndianness(babyJub.packPoint(this.p));
@@ -56,6 +66,10 @@ export class PublicKey {
 
   toString(): string {
     return this.compress().toString();
+  }
+  
+  hex(): string {
+    return Hex.encodeString(this.compress());
   }
 
   verifyPoseidon(msg: bigint, sig: Signature): boolean {
@@ -76,18 +90,14 @@ export class PrivateKey {
   toString(): string {
     return this.sk.toString();
   }
+  
+  hex(): string {
+    return Hex.encodeString(this.sk);
+  }
 
   public(): PublicKey {
     return new PublicKey(eddsa.prv2pub(this.sk));
   }
-
-  // toPrivScalar(): bigint {
-  //   const h1 = createBlakeHash('blake512').update(this.sk).digest();
-  //   const sBuff = eddsa.pruneBuffer(h1.slice(0, 32));
-  //   let s = Scalar.fromRprLE(sBuff, 0, 32);
-  //   return s;
-  //   // return (bigint.leBuff2int(sBuff)).shr(3);
-  // }
 
   signPoseidon(msg: bigint): Signature {
     const s = eddsa.signPoseidon(this.sk, msg);

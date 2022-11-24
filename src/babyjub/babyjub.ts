@@ -74,7 +74,7 @@ export class BabyJub {
     return res;
   }
 
-  inSubgroup(P: bigint[]) {
+  inSubgroup(P: bigint[]): boolean {
     const F = this.F;
     if (!this.inCurve(P)) return false;
     const res = this.mulPointEscalar(P, this.subOrder);
