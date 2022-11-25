@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-ignore: blake-hash no declarations
 import createBlakeHash from 'blake-hash';
 import { Hex } from '../hex';
 import { babyJub, BabyJub } from './babyjub';
@@ -9,7 +9,7 @@ import { PublicKey, Signature } from './eddsa-keys';
 export class Eddsa {
   babyJub: BabyJub;
   poseidon: Poseidon;
-  F: {};
+  F: unknown;
 
   constructor(babyJub: BabyJub, poseidon: Poseidon) {
     this.babyJub = babyJub;
@@ -25,7 +25,7 @@ export class Eddsa {
   }
 
   prv2pub(prv: Uint8Array): [bigint, bigint] {
-    const F = this.babyJub.F;
+    // const F = this.babyJub.F;
     const privHex = Hex.encodeString(prv);
     const sBuff = this.pruneBuffer(createBlakeHash('blake512').update(privHex, 'hex').digest());
 
@@ -88,7 +88,7 @@ export class Eddsa {
     const buff = new Uint8Array(64);
     const R8p = this.babyJub.packPoint(sig.R8);
     buff.set(R8p, 0);
-    const Sp = Scalar.toRprLE(buff, 32, sig.S, 32);
+    Scalar.toRprLE(buff, 32, sig.S, 32);
     return buff;
   }
 

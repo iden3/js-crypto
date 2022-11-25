@@ -12,7 +12,11 @@
       "prettier"
     ],
     "rules": {
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {"ts-ignore": "allow-with-description"}
+      ],
       "no-console": 1,       // Means warning
       "prettier/prettier": 2 // Means error
     }
-}  
+}

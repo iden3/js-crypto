@@ -29,7 +29,7 @@ export class Signature {
   toString(): string {
     return this.compress().toString();
   }
-  
+
   hex(): string {
     return Hex.encodeString(this.compress());
   }
@@ -53,7 +53,7 @@ export class PublicKey {
     }
     return new PublicKey(p);
   }
-  
+
   static newFromHex(hexStr: string): PublicKey {
     const buff = Hex.decodeString(hexStr);
     return PublicKey.newFromCompressed(buff);
@@ -67,7 +67,7 @@ export class PublicKey {
   toString(): string {
     return this.compress().toString();
   }
-  
+
   hex(): string {
     return Hex.encodeString(this.compress());
   }
@@ -90,7 +90,7 @@ export class PrivateKey {
   toString(): string {
     return this.sk.toString();
   }
-  
+
   hex(): string {
     return Hex.encodeString(this.sk);
   }
