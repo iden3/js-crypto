@@ -1,0 +1,22 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "prettier"
+    ],
+    "rules": {
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {"ts-ignore": "allow-with-description"}
+      ],
+      "no-console": 1,       // Means warning
+      "prettier/prettier": 2 // Means error
+    }
+}
