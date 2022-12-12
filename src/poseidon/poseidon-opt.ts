@@ -69,10 +69,7 @@ export class Poseidon {
   }
 
   hashBytes(msg: Uint8Array): bigint {
-    let inputs: Array<bigint> = [];
-    for (let i = 0; i < SPONGE_INPUTS; i += 1) {
-      inputs.push(BigInt(0));
-    }
+    const inputs = new Array(SPONGE_INPUTS).fill(BigInt(0));
     let dirty = false;
     let hash: bigint;
 
@@ -83,7 +80,6 @@ export class Poseidon {
       if (k === SPONGE_INPUTS - 1) {
         hash = this.hash(inputs);
         dirty = false;
-        inputs = [];
         inputs[0] = hash.valueOf();
         for (let j = 1; j < SPONGE_INPUTS; j += 1) {
           inputs[j] = BigInt(0);
@@ -95,7 +91,7 @@ export class Poseidon {
     }
 
     if (msg.length % SPONGE_CHUNK_SIZE != 0) {
-      const buff = new Uint8Array(new ArrayBuffer(SPONGE_CHUNK_SIZE));
+      const buff = new Uint8Array(SPONGE_CHUNK_SIZE);
       const slice = msg.slice(parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`) * SPONGE_CHUNK_SIZE);
       slice.forEach((v, idx) => {
         buff[idx] = v;
