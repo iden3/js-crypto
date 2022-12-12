@@ -81,6 +81,7 @@ export class Poseidon {
         hash = this.hash(inputs);
         dirty = false;
         inputs[0] = hash.valueOf();
+        inputs.fill(BigInt(0), 1, SPONGE_CHUNK_SIZE);
         for (let j = 1; j < SPONGE_INPUTS; j += 1) {
           inputs[j] = BigInt(0);
         }
