@@ -1,19 +1,7 @@
-import { ffUtils, poseidon } from '../src';
+import {  poseidon } from '../src';
 import ByteBuffer from 'bytebuffer';
 
 describe('Poseidon test', () => {
-  const str2ArrBuf = (str: string): ArrayBuffer => {
-    const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    const bufView = new Uint16Array(buf);
-    for (let i = 0, strLen = str.length; i < strLen; i++) {
-      bufView[i] = str.charCodeAt(i);
-    }
-    return buf;
-  };
-
-  const str2Bytes = (str: string): Uint8Array => {
-    return new Uint8Array(str2ArrBuf(str));
-  };
 
   it('test 2 inputs', () => {
     const inputs = [1, 2].map((v) => BigInt(v));
@@ -37,7 +25,7 @@ describe('Poseidon test', () => {
   });
 
   it('test hash bytes', async () => {
-    const testVectors2 = [
+    const testVectors = [
       {
         bytes: 'dead',
         expectedHash: '244ec1a137a24c92404de9f9c39907be151026a4eb7f9cfea60a5740e8a73b7'
@@ -82,7 +70,7 @@ describe('Poseidon test', () => {
       }
     ];
 
-    testVectors2.forEach(({ bytes, expectedHash }) => {
+    testVectors.forEach(({ bytes, expectedHash }) => {
       const input = new Uint8Array(ByteBuffer.fromHex(bytes).toArrayBuffer());
       expect(poseidon.hashBytes(new Uint8Array(input)).toString(16)).toEqual(expectedHash);
     });

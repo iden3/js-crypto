@@ -74,7 +74,7 @@ export class Poseidon {
       inputs.push(BigInt(0));
     }
     let dirty = false;
-    let hash: BigInt;
+    let hash: bigint;
 
     let k = 0;
     for (let i = 0; i < parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`); i += 1) {
@@ -95,7 +95,7 @@ export class Poseidon {
     }
 
     if (msg.length % SPONGE_CHUNK_SIZE != 0) {
-      let buff = new Uint8Array(new ArrayBuffer(SPONGE_CHUNK_SIZE));
+      const buff = new Uint8Array(new ArrayBuffer(SPONGE_CHUNK_SIZE));
       const slice = msg.slice(parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`) * SPONGE_CHUNK_SIZE);
       slice.forEach((v, idx) => {
         buff[idx] = v;
@@ -109,7 +109,7 @@ export class Poseidon {
       hash = this.hash(inputs);
     }
 
-    // @ts-ignore
+    // @ts-ignore: if we reach here then hash should be assigned value
     return hash.valueOf();
   }
 }
