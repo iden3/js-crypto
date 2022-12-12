@@ -3,6 +3,8 @@ import op from './poseidon-constants-opt.json';
 
 const N_ROUNDS_F = 8;
 const N_ROUNDS_P = [56, 57, 56, 60, 60, 63, 64, 63, 60, 66, 60, 65, 70, 60, 64, 68];
+const SPONGE_INPUTS = 16;
+const SPONGE_CHUNK_SIZE = 31;
 
 const F = new F1Field(
   Scalar.fromString('21888242871839275222246405745257275088548364400416034343698204186575808495617')
@@ -64,6 +66,51 @@ export class Poseidon {
     state = state.map((_, i) => state.reduce((acc, a, j) => F.add(acc, F.mul(M[j][i], a)), F.zero));
 
     return F.normalize(state[0]);
+  }
+
+  hashBytes(msg: Uint8Array): bigint {
+    let inputs: Array<bigint> = [];
+    for (let i = 0; i < SPONGE_INPUTS; i += 1) {
+      inputs.push(BigInt(0));
+    }
+    let dirty = false;
+    let hash: BigInt;
+
+    let k = 0;
+    for (let i = 0; i < parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`); i += 1) {
+      dirty = true;
+      inputs[k] = utils.beBuff2int(msg.slice(SPONGE_CHUNK_SIZE * i, SPONGE_CHUNK_SIZE * (i + 1)));
+      if (k === SPONGE_INPUTS - 1) {
+        hash = this.hash(inputs);
+        dirty = false;
+        inputs = [];
+        inputs[0] = hash.valueOf();
+        for (let j = 1; j < SPONGE_INPUTS; j += 1) {
+          inputs[j] = BigInt(0);
+        }
+        k = 1;
+      } else {
+        k += 1;
+      }
+    }
+
+    if (msg.length % SPONGE_CHUNK_SIZE != 0) {
+      let buff = new Uint8Array(new ArrayBuffer(SPONGE_CHUNK_SIZE));
+      const slice = msg.slice(parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`) * SPONGE_CHUNK_SIZE);
+      slice.forEach((v, idx) => {
+        buff[idx] = v;
+      });
+      inputs[k] = utils.beBuff2int(buff);
+      dirty = true;
+    }
+
+    if (dirty) {
+      // we haven't hashed something in the main sponge loop and need to do hash here
+      hash = this.hash(inputs);
+    }
+
+    // @ts-ignore
+    return hash.valueOf();
   }
 }
 export const poseidon = new Poseidon();
