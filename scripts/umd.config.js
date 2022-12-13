@@ -8,7 +8,7 @@ esbuild.build({
   ...baseConfig,
   minify: true,
   format: 'iife',
-  outfile: pkg.main,
+  outfile: pkg.main.replace('cjs', 'umd'),
   globalName: name
 
 }).catch(() => process.exit(1));
