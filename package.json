@@ -5,19 +5,26 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "source": "./src/index.ts",
+  "esm:esbuild": "dist/esm_esbuild/index.js",
   "typings": "dist/types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "config",
+    "scripts",
+    "src",
+    "tsconfig.json"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:esm && npm run build:umd && npm run build:tsc",
-    "build:esm": "node ./scripts/esm.config.js",
+    "build": "npm run clean && npm run build:esm && npm run build:umd && npm run build:esm:esbuild && npm run build:tsc",
+    "build:esm:esbuild": "node ./scripts/esm.config.js",
     "build:umd": "node ./scripts/umd.config.js",
     "build:tsc": "tsc --module commonjs",
+    "build:esm": "tsc -p config/tsconfig.esm.json",
     "clean": "rimraf ./dist",
     "test": "jest",
     "lint": "eslint --fix --ext .js,.ts src/**",
-    "format": "prettier --config .prettierrc './**/*.ts' --write"
+    "format": "prettier --config .prettierrc './**/*.ts' --write",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

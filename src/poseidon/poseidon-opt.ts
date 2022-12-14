@@ -11,15 +11,15 @@ const F = new F1Field(
 );
 const pow5 = (a: bigint): bigint => F.mul(a, F.square(F.square(a, a)));
 
-const opt = utils.unstringifyBigInts(op);
-
 // circomlibjs Poseidon bn128
 export class Poseidon {
-  F = F;
-  hash(inputs: bigint[]): bigint {
+  static F = F;
+  static hash(inputs: bigint[]): bigint {
     if (!(inputs.length > 0 && inputs.length <= N_ROUNDS_P.length)) {
       throw new Error('Invalid inputs');
     }
+
+    const opt = utils.unstringifyBigInts(op);
 
     const t = inputs.length + 1;
     const nRoundsF = N_ROUNDS_F;
@@ -68,7 +68,7 @@ export class Poseidon {
     return F.normalize(state[0]);
   }
 
-  hashBytes(msg: Uint8Array): bigint {
+  static hashBytes(msg: Uint8Array): bigint {
     const inputs = new Array(SPONGE_INPUTS).fill(BigInt(0));
     let dirty = false;
     let hash: bigint;
@@ -78,7 +78,7 @@ export class Poseidon {
       dirty = true;
       inputs[k] = utils.beBuff2int(msg.slice(SPONGE_CHUNK_SIZE * i, SPONGE_CHUNK_SIZE * (i + 1)));
       if (k === SPONGE_INPUTS - 1) {
-        hash = this.hash(inputs);
+        hash = Poseidon.hash(inputs);
         dirty = false;
         inputs[0] = hash.valueOf();
         inputs.fill(BigInt(0), 1, SPONGE_CHUNK_SIZE);
@@ -103,11 +103,11 @@ export class Poseidon {
 
     if (dirty) {
       // we haven't hashed something in the main sponge loop and need to do hash here
-      hash = this.hash(inputs);
+      hash = Poseidon.hash(inputs);
     }
 
     // @ts-ignore: if we reach here then hash should be assigned value
     return hash.valueOf();
   }
 }
-export const poseidon = new Poseidon();
+export const poseidon = Poseidon;
