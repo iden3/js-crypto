@@ -1,11 +1,11 @@
 {
   "name": "@iden3/js-crypto",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "source": "./src/index.ts",
-  "esm:build": "dist/esm_build/index.js",
+  "esm:esbuild": "dist/esm_esbuild/index.js",
   "typings": "dist/types/index.d.ts",
   "files": [
     "dist",
@@ -15,8 +15,8 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:esm && npm run build:umd && npm run build:esm:build && npm run build:tsc",
-    "build:esm:build": "node ./scripts/esm.config.js",
+    "build": "npm run clean && npm run build:esm && npm run build:umd && npm run build:esm:esbuild && npm run build:tsc",
+    "build:esm:esbuild": "node ./scripts/esm.config.js",
     "build:umd": "node ./scripts/umd.config.js",
     "build:tsc": "tsc --module commonjs",
     "build:esm": "tsc -p config/tsconfig.esm.json",
