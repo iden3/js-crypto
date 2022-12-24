@@ -8,7 +8,6 @@ import { PublicKey, Signature } from './eddsa-keys';
 
 export class Eddsa {
   babyJub: BabyJub = babyJub;
-  F = babyJub.F;
 
   static pruneBuffer(buff: Uint8Array) {
     buff[0] = buff[0] & 0xf8;
