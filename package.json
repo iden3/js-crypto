@@ -23,8 +23,7 @@
     "clean": "rimraf ./dist",
     "test": "jest",
     "lint": "eslint --fix --ext .js,.ts src/**",
-    "format": "prettier --config .prettierrc './**/*.ts' --write",
-    "prepare": "npm run build"
+    "format": "prettier --config .prettierrc './**/*.ts' --write"
   },
   "repository": {
     "type": "git",
