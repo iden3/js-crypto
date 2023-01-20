@@ -1,6 +1,8 @@
 import { F1Field, Scalar, utils } from '../ff';
 import op from './poseidon-constants-opt.json';
 
+export const OPT = utils.unstringifyBigInts(op);
+
 const N_ROUNDS_F = 8;
 const N_ROUNDS_P = [56, 57, 56, 60, 60, 63, 64, 63, 60, 66, 60, 65, 70, 60, 64, 68];
 const SPONGE_INPUTS = 16;
@@ -19,15 +21,13 @@ export class Poseidon {
       throw new Error('Invalid inputs');
     }
 
-    const opt = utils.unstringifyBigInts(op);
-
     const t = inputs.length + 1;
     const nRoundsF = N_ROUNDS_F;
     const nRoundsP = N_ROUNDS_P[t - 2];
-    const C = opt.C[t - 2];
-    const S = opt.S[t - 2];
-    const M = opt.M[t - 2];
-    const P = opt.P[t - 2];
+    const C = OPT.C[t - 2];
+    const S = OPT.S[t - 2];
+    const M = OPT.M[t - 2];
+    const P = OPT.P[t - 2];
 
     let state: bigint[] = [F.zero, ...inputs.map((a) => F.e(a))];
 
