@@ -109,5 +109,44 @@ export class Poseidon {
     // @ts-ignore: if we reach here then hash should be assigned value
     return hash.valueOf();
   }
+
+  // SpongeHashX returns a sponge hash of inputs using Poseidon with configurable frame size
+  static spongeHashX(inputs: bigint[], frameSize: number): bigint {
+    if (frameSize < 2 || frameSize > 16) {
+      throw new Error('incorrect frame size');
+    }
+
+    // not used frame default to zero
+    let frame = new Array(frameSize).fill(BigInt(0));
+
+    let dirty = false;
+    let hash: bigint | undefined = undefined;
+
+    let k = 0;
+    for (let i = 0; i < inputs.length; i++) {
+      dirty = true;
+      frame[k] = inputs[i];
+      if (k === frameSize - 1) {
+        hash = this.hash(frame);
+        dirty = false;
+        frame = new Array(frameSize).fill(BigInt(0));
+        frame[0] = hash;
+        k = 1;
+      } else {
+        k++;
+      }
+    }
+
+    if (dirty) {
+      // we haven't hashed something in the main sponge loop and need to do hash here
+      hash = this.hash(frame);
+    }
+
+    if (!hash) {
+      throw new Error('hash is undefined');
+    }
+
+    return hash;
+  }
 }
 export const poseidon = Poseidon;
