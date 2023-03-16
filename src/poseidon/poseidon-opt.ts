@@ -68,21 +68,27 @@ export class Poseidon {
     return F.normalize(state[0]);
   }
 
+  // HashBytes returns a sponge hash of a msg byte slice split into blocks of 31 bytes
   static hashBytes(msg: Uint8Array): bigint {
-    const inputs = new Array(SPONGE_INPUTS).fill(BigInt(0));
+    return Poseidon.hashBytesX(msg, SPONGE_INPUTS);
+  }
+
+  // hashBytesX returns a sponge hash of a msg byte slice split into blocks of 31 bytes
+  static hashBytesX(msg: Uint8Array, frameSize: number): bigint {
+    const inputs = new Array(frameSize).fill(BigInt(0));
     let dirty = false;
-    let hash: bigint;
+    let hash!: bigint;
 
     let k = 0;
     for (let i = 0; i < parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`); i += 1) {
       dirty = true;
       inputs[k] = utils.beBuff2int(msg.slice(SPONGE_CHUNK_SIZE * i, SPONGE_CHUNK_SIZE * (i + 1)));
-      if (k === SPONGE_INPUTS - 1) {
+      if (k === frameSize - 1) {
         hash = Poseidon.hash(inputs);
         dirty = false;
-        inputs[0] = hash.valueOf();
+        inputs[0] = hash;
         inputs.fill(BigInt(0), 1, SPONGE_CHUNK_SIZE);
-        for (let j = 1; j < SPONGE_INPUTS; j += 1) {
+        for (let j = 1; j < frameSize; j += 1) {
           inputs[j] = BigInt(0);
         }
         k = 1;
@@ -106,8 +112,7 @@ export class Poseidon {
       hash = Poseidon.hash(inputs);
     }
 
-    // @ts-ignore: if we reach here then hash should be assigned value
-    return hash.valueOf();
+    return hash;
   }
 
   // SpongeHashX returns a sponge hash of inputs using Poseidon with configurable frame size
@@ -120,7 +125,7 @@ export class Poseidon {
     let frame = new Array(frameSize).fill(BigInt(0));
 
     let dirty = false;
-    let hash: bigint | undefined = undefined;
+    let hash!: bigint;
 
     let k = 0;
     for (let i = 0; i < inputs.length; i++) {
