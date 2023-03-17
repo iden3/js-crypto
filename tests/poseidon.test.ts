@@ -1,8 +1,46 @@
-import {  poseidon } from '../src';
+import { testVectors } from './test-vectors';
+import { Hex, poseidon } from '../src';
 import ByteBuffer from 'bytebuffer';
 
-describe('Poseidon test', () => {
+function fromLittleEndian(bytes: Uint8Array): bigint {
+  const n256 = BigInt(256);
+  let result = BigInt(0);
+  let base = BigInt(1);
+  bytes.forEach((byte) => {
+    result += base * BigInt(byte);
+    base = base * n256;
+  });
+  return result;
+}
 
+function fromBigEndian(bytes: Uint8Array): bigint {
+  return fromLittleEndian(bytes.reverse());
+}
+
+function splitBytes(b: Uint8Array, chunkSize: number): Uint8Array[] {
+  if (!b.length) {
+    return [];
+  }
+  if (chunkSize >= b.length) {
+    return [b];
+  }
+  const chunks: Uint8Array[] = [];
+  let currentLen = 0;
+  let currentStart = 0;
+  for (let i = 0; i < b.length; i++) {
+    if (currentLen == chunkSize) {
+      const chunk = b.slice(currentStart, i);
+      chunks.push(chunk);
+      currentLen = 0;
+      currentStart = i;
+    }
+    currentLen++;
+  }
+  chunks.push(b.slice(currentStart, b.length));
+  return chunks;
+}
+
+describe('Poseidon test', () => {
   it('test 2 inputs', () => {
     const inputs = [1, 2].map((v) => BigInt(v));
     const res = poseidon.hash(inputs);
@@ -74,5 +112,22 @@ describe('Poseidon test', () => {
       const input = new Uint8Array(ByteBuffer.fromHex(bytes).toArrayBuffer());
       expect(poseidon.hashBytes(new Uint8Array(input)).toString(16)).toEqual(expectedHash);
     });
+  });
+
+  it('TestSpongeHashX', () => {
+    for (let i = 0; i < testVectors.length; i++) {
+      const vector = testVectors[i];
+      const b = Hex.decodeString(vector.hexString);
+      const chunks = splitBytes(b, 31);
+
+      const inputs: bigint[] = [];
+
+      for (let i = 0; i < chunks.length; i++) {
+        inputs[i] = fromBigEndian(chunks[i]);
+      }
+
+      const res = poseidon.spongeHashX(inputs, vector.frameSize);
+      expect(res.toString(16)).toEqual(vector.expectedHash);
+    }
   });
 });

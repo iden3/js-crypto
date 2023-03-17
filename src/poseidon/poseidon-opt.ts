@@ -68,21 +68,27 @@ export class Poseidon {
     return F.normalize(state[0]);
   }
 
+  // HashBytes returns a sponge hash of a msg byte slice split into blocks of 31 bytes
   static hashBytes(msg: Uint8Array): bigint {
-    const inputs = new Array(SPONGE_INPUTS).fill(BigInt(0));
+    return Poseidon.hashBytesX(msg, SPONGE_INPUTS);
+  }
+
+  // hashBytesX returns a sponge hash of a msg byte slice split into blocks of 31 bytes
+  static hashBytesX(msg: Uint8Array, frameSize: number): bigint {
+    const inputs = new Array(frameSize).fill(BigInt(0));
     let dirty = false;
-    let hash: bigint;
+    let hash!: bigint;
 
     let k = 0;
     for (let i = 0; i < parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`); i += 1) {
       dirty = true;
       inputs[k] = utils.beBuff2int(msg.slice(SPONGE_CHUNK_SIZE * i, SPONGE_CHUNK_SIZE * (i + 1)));
-      if (k === SPONGE_INPUTS - 1) {
+      if (k === frameSize - 1) {
         hash = Poseidon.hash(inputs);
         dirty = false;
-        inputs[0] = hash.valueOf();
+        inputs[0] = hash;
         inputs.fill(BigInt(0), 1, SPONGE_CHUNK_SIZE);
-        for (let j = 1; j < SPONGE_INPUTS; j += 1) {
+        for (let j = 1; j < frameSize; j += 1) {
           inputs[j] = BigInt(0);
         }
         k = 1;
@@ -106,8 +112,46 @@ export class Poseidon {
       hash = Poseidon.hash(inputs);
     }
 
-    // @ts-ignore: if we reach here then hash should be assigned value
-    return hash.valueOf();
+    return hash;
+  }
+
+  // SpongeHashX returns a sponge hash of inputs using Poseidon with configurable frame size
+  static spongeHashX(inputs: bigint[], frameSize: number): bigint {
+    if (frameSize < 2 || frameSize > 16) {
+      throw new Error('incorrect frame size');
+    }
+
+    // not used frame default to zero
+    let frame = new Array(frameSize).fill(BigInt(0));
+
+    let dirty = false;
+    let hash!: bigint;
+
+    let k = 0;
+    for (let i = 0; i < inputs.length; i++) {
+      dirty = true;
+      frame[k] = inputs[i];
+      if (k === frameSize - 1) {
+        hash = this.hash(frame);
+        dirty = false;
+        frame = new Array(frameSize).fill(BigInt(0));
+        frame[0] = hash;
+        k = 1;
+      } else {
+        k++;
+      }
+    }
+
+    if (dirty) {
+      // we haven't hashed something in the main sponge loop and need to do hash here
+      hash = this.hash(frame);
+    }
+
+    if (!hash) {
+      throw new Error('hash is undefined');
+    }
+
+    return hash;
   }
 }
 export const poseidon = Poseidon;
