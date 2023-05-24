@@ -1,15 +1,11 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
-    "target": "es2020",
-    "module": "es6",
-    "lib": ["es2020"],
-    "allowJs": true,
-    "esModuleInterop": true,
-
-    "strict": true,
-    "sourceMap": true,
+    "target": "ES2020",
+    "module": "es2020",
     "declaration": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "declarationDir": "dist/types",
@@ -18,7 +14,6 @@
       "node_modules/@types"
     ]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
+
