@@ -1,4 +1,3 @@
-// @ts-ignore: blake-hash no declarations
 import createBlakeHash from 'blake-hash';
 import { Hex } from '../hex';
 import { babyJub, BabyJub } from './babyjub';

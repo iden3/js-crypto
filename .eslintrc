@@ -1,9 +1,3 @@
 {
-  "rules": {
-    "@typescript-eslint/ban-ts-comment": [
-      "error",
-      {"ts-ignore": "allow-with-description"}
-    ]
-  },
-   "extends": ["@iden3/eslint-config"],
+   "extends": ["@iden3/eslint-config"]
 }
