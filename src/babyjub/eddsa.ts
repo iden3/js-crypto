@@ -1,9 +1,8 @@
-import createBlakeHash from 'blake-hash';
-import { Hex } from '../hex';
 import { babyJub, BabyJub } from './babyjub';
 import { poseidon } from '../poseidon';
 import { F1Field, Scalar, utils } from '../ff';
 import { PublicKey, Signature } from './eddsa-keys';
+import { Blake512 } from '../blake';
 
 export class Eddsa {
   babyJub: BabyJub = babyJub;
@@ -16,22 +15,17 @@ export class Eddsa {
   }
 
   static prv2pub(prv: Uint8Array): [bigint, bigint] {
-    // const F = babyJub.F;
-    const privHex = Hex.encodeString(prv);
-    const sBuff = this.pruneBuffer(createBlakeHash('blake512').update(privHex, 'hex').digest());
-
+    const sBuff = this.pruneBuffer(new Blake512().update(prv).digest());
     const s = Scalar.fromRprLE(sBuff, 0, 32);
-    const A = babyJub.mulPointEscalar(babyJub.Base8, Scalar.shr(s, 3));
+    const A = babyJub.mulPointEscalar(babyJub.Base8, Scalar.shr(s, 3n));
     return A;
   }
 
   static signPoseidon(prv: Uint8Array, msg: bigint) {
-    const privateHex = Hex.encodeString(prv);
-    const h1 = createBlakeHash('blake512').update(privateHex, 'hex').digest();
-
+    const h1 = new Blake512().update(prv).digest();
     const sBuff = Eddsa.pruneBuffer(h1.slice(0, 32));
     const s = utils.leBuff2int(sBuff);
-    const A = babyJub.mulPointEscalar(babyJub.Base8, Scalar.shr(s, 3));
+    const A = babyJub.mulPointEscalar(babyJub.Base8, Scalar.shr(s, 3n));
 
     const msgBuff = utils.leInt2Buff(msg, 32);
 
@@ -39,10 +33,10 @@ export class Eddsa {
     composeBuff.set(h1.slice(32, 64), 0);
     composeBuff.set(msgBuff, 32);
 
-    const rBuff = createBlakeHash('blake512').update(Hex.encodeString(composeBuff), 'hex').digest();
+    const rBuff = new Blake512().update(composeBuff).digest();
     let r = utils.leBuff2int(rBuff);
     const Fr = new F1Field(babyJub.subOrder);
-    r = Fr.e(r);
+    r = Fr.e(r) as bigint;
     const R8 = babyJub.mulPointEscalar(babyJub.Base8, r);
     const hm = poseidon.hash([R8[0], R8[1], A[0], A[1], msg]);
     const S = Fr.add(r, Fr.mul(hm, s));
@@ -64,10 +58,10 @@ export class Eddsa {
     if (sig.S >= babyJub.subOrder) return false;
 
     const hm = poseidon.hash([sig.R8[0], sig.R8[1], A[0], A[1], msg]);
-    const hms = Scalar.e(babyJub.F.toObject(hm));
+    const hms = hm;
 
     const Pleft = babyJub.mulPointEscalar(babyJub.Base8, sig.S);
-    let Pright = babyJub.mulPointEscalar(A, Scalar.mul(hms, 8));
+    let Pright = babyJub.mulPointEscalar(A, Scalar.mul(hms, 8n));
     Pright = babyJub.addPoint(sig.R8, Pright);
 
     if (!babyJub.F.eq(Pleft[0], Pright[0])) return false;

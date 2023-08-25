@@ -19,7 +19,7 @@ export class Signature {
     if (sig.R8 == null) {
       throw new Error('unpackSignature failed');
     }
-    return new Signature(sig.R8, sig.S);
+    return new Signature(sig.R8, sig.S as bigint);
   }
 
   compress(): Uint8Array {

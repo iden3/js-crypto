@@ -1,6 +1,5 @@
 import { testVectors } from './test-vectors';
 import { Hex, poseidon } from '../src';
-import ByteBuffer from 'bytebuffer';
 
 function fromLittleEndian(bytes: Uint8Array): bigint {
   const n256 = BigInt(256);
@@ -109,8 +108,8 @@ describe('Poseidon test', () => {
     ];
 
     testVectors.forEach(({ bytes, expectedHash }) => {
-      const input = new Uint8Array(ByteBuffer.fromHex(bytes).toArrayBuffer());
-      expect(poseidon.hashBytes(new Uint8Array(input)).toString(16)).toEqual(expectedHash);
+      const input = Hex.decodeString(bytes);
+      expect(poseidon.hashBytes(input).toString(16)).toEqual(expectedHash);
     });
   });
 

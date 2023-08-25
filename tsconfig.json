@@ -4,16 +4,14 @@
     "target": "es2020",
     "module": "es6",
     "lib": ["es2020"],
-    "allowJs": true,
     "esModuleInterop": true,
-
     "strict": true,
     "sourceMap": true,
-    "declaration": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "declaration": true,
     "declarationDir": "dist/types",
-    "outDir": "dist/cjs",
+    "outDir": "dist/node/cjs",
     "typeRoots": [
       "node_modules/@types"
     ]
