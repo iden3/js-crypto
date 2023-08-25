@@ -15,6 +15,14 @@
     Test browser
 </body>
 <script>
+    // Function to convert hex to base64
+    function base64FromHex(hex) {
+        hex = hex.replace(/^0x/, '');
+        hex = hex.length % 2 != 0 ? '0' + hex : hex;
+        const buffer = new Uint8Array(hex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+        return btoa(String.fromCharCode(...buffer));
+    }
+
     const { poseidon, PrivateKey, Signature, utils, ffUtils, Hex } = IdenJsCrypto;
     const msgBuf = Hex.decodeString('000102030405060708090000');
     const msg = ffUtils.leBuff2int(msgBuf);
@@ -35,7 +43,7 @@
 
     const uSignature = Signature.newFromCompressed(pSignature);
 
-    console.log(pubKey.verifyPoseidon(msg, uSignature));
+    console.assert(pubKey.verifyPoseidon(msg, uSignature));
 </script>
 
 </html>
