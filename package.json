@@ -15,14 +15,9 @@
   },
   "typings": "dist/types/index.d.ts",
   "files": [
-    "dist",
-    "src",
-    "tsconfig.json",
-    "tsconfig.esm.json",
-    "scripts"
+    "dist"
   ],
   "scripts": {
-    "prepare": "npm run build",
     "build": "npm run clean && npm run build:node && npm run build:browser",
     "build:browser": "node ./scripts/browser.js",
     "build:node": "npm run build:tsc && npm run build:esm",
