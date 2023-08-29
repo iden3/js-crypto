@@ -1,3 +1,10 @@
+/**
+ * Copyright
+ * This code is an adaptation of the code found in the "blake-hash" library (https://www.npmjs.com/package/blake-hash),
+ * rewritten from JavaScript to TypeScript.
+ *
+ */
+
 const zo = Uint8Array.from([0x01]);
 const oo = Uint8Array.from([0x81]);
 

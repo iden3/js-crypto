@@ -1,3 +1,6 @@
+/**
+ * Type definition for the browser crypto object.
+ */
 type BrowserCrypto = { crypto?: { getRandomValues?: (arg0: Uint8Array) => void } };
 
 export function getRandomBytes(length: number): Uint8Array {
