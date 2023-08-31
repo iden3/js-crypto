@@ -1,7 +1,12 @@
 import { F1Field, Scalar, utils } from '../ff';
 import op from './poseidon-constants-opt.json';
 
-export const OPT = utils.unstringifyBigInts(op);
+export const OPT = utils.unstringifyBigInts(op) as {
+  C: bigint[][];
+  S: bigint[][];
+  M: bigint[][][];
+  P: bigint[][][];
+};
 
 const N_ROUNDS_F = 8;
 const N_ROUNDS_P = [56, 57, 56, 60, 60, 63, 64, 63, 60, 66, 60, 65, 70, 60, 64, 68];
@@ -11,7 +16,7 @@ const SPONGE_CHUNK_SIZE = 31;
 const F = new F1Field(
   Scalar.fromString('21888242871839275222246405745257275088548364400416034343698204186575808495617')
 );
-const pow5 = (a: bigint): bigint => F.mul(a, F.square(F.square(a, a)));
+const pow5 = (a: bigint): bigint => F.mul(a, F.square(F.square(a)));
 
 // circomlibjs Poseidon bn128
 export class Poseidon {
@@ -29,7 +34,7 @@ export class Poseidon {
     const M = OPT.M[t - 2];
     const P = OPT.P[t - 2];
 
-    let state: bigint[] = [F.zero, ...inputs.map((a) => F.e(a))];
+    let state: bigint[] = [F.zero, ...inputs.map((a) => F.e(a) as bigint)];
 
     state = state.map((a, i) => F.add(a, C[i]));
 
