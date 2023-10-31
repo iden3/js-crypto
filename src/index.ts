@@ -4,4 +4,4 @@ export * from './hex';
 export * from './blake';
 export * from './base58';
 export * from './sha256';
-export { utils as ffUtils } from './ff';
+export { utils as ffUtils, getRandomBytes } from './ff';
