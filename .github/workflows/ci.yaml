@@ -4,7 +4,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [18.19.1, 20.11.1]
+        version: ['lts/*']
     timeout-minutes: 7
     runs-on: ubuntu-latest
     steps:
