@@ -36,7 +36,7 @@
     "url": "git+https://github.com/iden3/js-crypto.git"
   },
   "author": "",
-  "license": "AGPL-3.0",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/iden3/js-crypto/issues"
   },
