@@ -18,7 +18,8 @@
     "build:esm": "tsc -p config/tsconfig.esm.json",
     "clean": "rimraf ./dist",
     "test": "jest",
-    "lint": "eslint --fix --ext .js,.ts src/**",
+    "lint": "eslint --fix --ext .ts src/** tests/**",
+    "lint:check": "eslint --ext .ts src/** tests/**",
     "format": "prettier --config .prettierrc './**/*.ts' --write"
   },
   "repository": {
@@ -32,9 +33,10 @@
   },
   "homepage": "https://github.com/iden3/js-crypto#readme",
   "devDependencies": {
-    "@iden3/eslint-config": "https://github.com/iden3/eslint-config",
+    "@cspell/eslint-plugin": "^8.14.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@iden3/eslint-config": "https://github.com/iden3/eslint-config",
     "@types/bytebuffer": "^5.0.44",
     "@types/jest": "^29.2.3",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
