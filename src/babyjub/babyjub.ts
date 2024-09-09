@@ -11,12 +11,13 @@ export class BabyJub {
   subOrder: bigint;
   A: bigint;
   D: bigint;
-  constructor(F: typeof F1Field) {
+
+  constructor(F: F1Field) {
     this.F = F;
-    this.p = Scalar.fromString(
+    this.p = BigInt(
       '21888242871839275222246405745257275088548364400416034343698204186575808495617'
     );
-    this.pm1d2 = Scalar.div(Scalar.sub(this.p, Scalar.e(1)), Scalar.e(2));
+    this.pm1d2 = Scalar.div(Scalar.sub(this.p, Scalar.one), 2n);
 
     this.Generator = [
       F.e('995203441582195749578291179787384436505546430278305826713579947235728471134'),
@@ -26,10 +27,10 @@ export class BabyJub {
       F.e('5299619240641551281634865583518297030282874472190772894086521144482721001553'),
       F.e('16950150798460657717958625567821834550301663161624707787222815936182638968203')
     ];
-    this.order = Scalar.fromString(
+    this.order = BigInt(
       '21888242871839275222246405745257275088614511777268538073601725287587578984328'
     );
-    this.subOrder = Scalar.shiftRight(this.order, 3);
+    this.subOrder = Scalar.shiftRight(this.order, 3n);
     this.A = F.e('168700');
     this.D = F.e('168696');
   }
@@ -68,7 +69,7 @@ export class BabyJub {
         res = this.addPoint(res, exp);
       }
       exp = this.addPoint(exp, exp);
-      rem = Scalar.shiftRight(rem, 1);
+      rem = Scalar.shiftRight(rem, Scalar.one);
     }
 
     return res;
@@ -118,7 +119,7 @@ export class BabyJub {
 
     const x2 = F.div(F.sub(F.one, y2), F.sub(this.A, F.mul(this.D, y2)));
 
-    const x2h = F.exp(x2, F.half);
+    const x2h = F.exp(x2, BigInt(F.half));
     if (!F.eq(F.one, x2h)) return null;
 
     let x = F.sqrt(x2);
@@ -133,7 +134,7 @@ export class BabyJub {
   }
 }
 const F = new F1Field(
-  Scalar.fromString('21888242871839275222246405745257275088548364400416034343698204186575808495617')
+  BigInt('21888242871839275222246405745257275088548364400416034343698204186575808495617')
 );
 
 export const babyJub = new BabyJub(F);
