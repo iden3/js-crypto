@@ -327,12 +327,12 @@ export class F1Field {
     return this.toRprLE(buff, o, this.mul(this.R, e));
   }
 
-  // Pases a buffer with Little Endian Representation
+  // Passes a buffer with Little Endian Representation
   fromRprLE(buff: Uint8Array, o: number) {
     return Scalar.fromRprLE(buff, o, this.n8);
   }
 
-  // Pases a buffer with Big Endian Representation
+  // Passes a buffer with Big Endian Representation
   fromRprBE(buff: Uint8Array, o: number) {
     return Scalar.fromRprBE(buff, o, this.n8);
   }
@@ -425,7 +425,7 @@ export function mulScalar(F: F1Field, base: bigint, e: bigint): bigint {
   } else if (n[n.length - 1] == -1) {
     res = F.neg(base);
   } else {
-    throw new Error('invlaud NAF');
+    throw new Error('invalid NAF');
   }
 
   for (let i = n.length - 2; i >= 0; i--) {

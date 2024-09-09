@@ -26,8 +26,8 @@
     "build:esm": "tsc -p config/tsconfig.esm.json",
     "clean": "rimraf ./dist",
     "test": "jest",
-    "lint": "eslint --fix --ext .ts src/** tests/**",
-    "lint:check": "eslint --ext .ts src/** tests/**",
+    "lint": "eslint --fix --ext .js,.ts src/** tests/**",
+    "lint:check": "eslint --ext .js,.ts src/** tests/**",
     "format": "prettier --config .prettierrc './**/*.ts' --write",
     "format:check": "prettier --config .prettierrc './**/*.ts' --check"
   },

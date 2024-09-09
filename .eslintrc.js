@@ -10,7 +10,22 @@ module.exports = {
         ...spellcheckerRule,
         cspell: {
           ...cspellConfig,
-          ignoreWords: ['dtau', 'escalar', 'pleft', 'pright']
+          ignoreWords: [
+            'dtau',
+            'escalar',
+            'pleft',
+            'pright',
+            'unstringify',
+            'bxor',
+            'nullt',
+            'msglen',
+            'negone',
+            'tonelli',
+            'nres',
+            'idiv',
+            'newr',
+            'bnot'
+          ]
         }
       }
     ]
