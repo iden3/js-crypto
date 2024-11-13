@@ -21,6 +21,7 @@ describe('eddsa keys(Private, Public, Signature)', () => {
     expect(fromHexPKey.p[0]).toEqual(x);
     expect(fromHexPKey.p[1]).toEqual(y);
   });
+
   it('test signature flow', () => {
     const msgBuf = Hex.decodeString('000102030405060708090000');
     const msg = ffUtils.leBuff2int(msgBuf);
@@ -67,4 +68,14 @@ describe('eddsa keys(Private, Public, Signature)', () => {
 
     expect(pubKey.verifyPoseidon(msg, uSignature)).toBeTruthy();
   });
+
+  it('Private key toBigInt', () => {
+    const skBuff = Uint8Array.from(new Array(32).fill(1).map((_, i) => i));
+
+    const privateKey = new PrivateKey(skBuff);
+
+    expect(privateKey.bigInt().toString()).toEqual(
+      '3817885988578745122822765953778691808009834824977012551803821922027918401423'
+    );
+  })
 });
