@@ -77,5 +77,5 @@ describe('eddsa keys(Private, Public, Signature)', () => {
     expect(privateKey.bigInt().toString()).toEqual(
       '3817885988578745122822765953778691808009834824977012551803821922027918401423'
     );
-  })
+  });
 });
