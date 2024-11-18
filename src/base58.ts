@@ -45,6 +45,7 @@ export const base58ToBytes = (
     if (c < 0)
       //see if the base58 digit lookup is invalid (-1)
       throw new Error(`Can't convert base58 string ${str} to bytes`);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     c || b.length ^ i ? i : b.push(0); //prepend the result array with a zero if the base58 digit is zero and non-zero characters haven't been seen yet (to ensure correct decode length)
     while (j in d || c) {
       //start looping through the bytes until there are no more bytes and no carry amount

@@ -95,7 +95,7 @@ export class Blake512 {
   private _length: number[];
   private _zo: Uint8Array;
   private _oo: Uint8Array;
-  private _nullt: boolean;
+  private _nullT: boolean;
   constructor() {
     this._h = [
       0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b, 0x3c6ef372, 0xfe94f82b, 0xa54ff53a,
@@ -109,7 +109,7 @@ export class Blake512 {
     this._blockOffset = 0;
     this._length = [0, 0, 0, 0];
 
-    this._nullt = false;
+    this._nullT = false;
 
     this._zo = zo;
     this._oo = oo;
@@ -136,7 +136,7 @@ export class Blake512 {
     for (i = 16; i < 24; ++i) v[i] = (this._s[i - 16] ^ u512[i - 16]) >>> 0;
     for (i = 24; i < 32; ++i) v[i] = u512[i - 16];
 
-    if (!this._nullt) {
+    if (!this._nullT) {
       v[24] = (v[24] ^ this._length[1]) >>> 0;
       v[25] = (v[25] ^ this._length[0]) >>> 0;
       v[26] = (v[26] ^ this._length[1]) >>> 0;
@@ -176,8 +176,8 @@ export class Blake512 {
     len[0] += this._blockOffset * 8;
     this._lengthCarry(len);
 
-    const msglen = new Uint8Array(16);
-    const dataView = new DataView(msglen.buffer);
+    const msgLen = new Uint8Array(16);
+    const dataView = new DataView(msgLen.buffer);
     for (let i = 0; i < 4; ++i) dataView.setUint32(i * 4, len[3 - i]);
 
     if (this._blockOffset === 111) {
@@ -185,7 +185,7 @@ export class Blake512 {
       this.update(this._oo);
     } else {
       if (this._blockOffset < 111) {
-        if (this._blockOffset === 0) this._nullt = true;
+        if (this._blockOffset === 0) this._nullT = true;
         this._length[0] -= (111 - this._blockOffset) * 8;
         this.update(Blake512.padding.slice(0, 111 - this._blockOffset));
       } else {
@@ -193,7 +193,7 @@ export class Blake512 {
         this.update(Blake512.padding.slice(0, 128 - this._blockOffset));
         this._length[0] -= 111 * 8;
         this.update(Blake512.padding.slice(1, 1 + 111));
-        this._nullt = true;
+        this._nullT = true;
       }
 
       this.update(this._zo);

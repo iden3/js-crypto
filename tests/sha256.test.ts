@@ -41,7 +41,7 @@ describe('SHA-256 Hashing', () => {
 
   it('should hash different inputs to different values', () => {
     const input1 = 'Hello, World!';
-    const input2 = 'Hello, Goodbay!';
+    const input2 = 'Hello, Good bay!';
     const hash1 = sha256(encoder.encode(input1));
     const hash2 = sha256(encoder.encode(input2));
 

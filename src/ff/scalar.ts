@@ -173,7 +173,7 @@ export const bor = (a: bigint, b: bigint): bigint => {
   return a | b;
 };
 
-export const bxor = (a: bigint, b: bigint): bigint => {
+export const bXor = (a: bigint, b: bigint): bigint => {
   return a ^ b;
 };
 
@@ -213,7 +213,7 @@ export const toRprBE = (buff: Uint8Array, o: number, e: bigint, n8: number): voi
   for (let i = 0; i < n8 / 4 - l; i++) v.setInt32(0, 0, false);
 };
 
-// Pases a buffer with Little Endian Representation
+// Passes a buffer with Little Endian Representation
 export const fromRprLE = (buff: Uint8Array, o: number, n8?: number): bigint => {
   n8 = n8 || buff.byteLength;
   o = o || 0;
@@ -223,7 +223,7 @@ export const fromRprLE = (buff: Uint8Array, o: number, n8?: number): bigint => {
   return fromString(a.join(''), 16);
 };
 
-// Pases a buffer with Big Endian Representation
+// Passes a buffer with Big Endian Representation
 export const fromRprBE = (buff: Uint8Array, o: number, n8: number): bigint => {
   n8 = n8 || buff.byteLength;
   o = o || 0;

@@ -1,12 +1,12 @@
 import * as Scalar from './scalar';
 
-export function unstringifyBigInts(o: unknown): unknown {
+export function unStringifyBigInts(o: unknown): unknown {
   if (Array.isArray(o)) {
-    return o.map(unstringifyBigInts);
+    return o.map(unStringifyBigInts);
   } else if (typeof o == 'object') {
     const res: { [k: string]: unknown } = {};
     for (const [key, val] of Object.entries(o as unknown as { [k: string]: unknown })) {
-      res[key] = unstringifyBigInts(val);
+      res[key] = unStringifyBigInts(val);
     }
     return res;
   }
