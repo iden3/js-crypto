@@ -28,7 +28,7 @@
     "build:tsc": "tsc --module commonjs",
     "build:esm": "tsc -p config/tsconfig.esm.json",
     "clean": "rimraf ./dist",
-    "test": "jest",
+    "test": "vitest run --globals --coverage",
     "lint": "eslint --fix",
     "lint:check": "eslint",
     "format": "prettier --config .prettierrc './**/*.ts' --write",
@@ -47,11 +47,11 @@
   "devDependencies": {
     "@iden3/eslint-config": "https://github.com/iden3/eslint-config",
     "@types/jest": "^29.5.14",
+    "@vitest/coverage-v8": "^2.1.4",
     "esbuild": "^0.24.0",
-    "jest": "^29.7.0",
     "rimraf": "^6.0.1",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "5.6.3",
+    "vitest": "^2.1.5"
   }
 }
