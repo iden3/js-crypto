@@ -134,5 +134,9 @@ describe('Poseidon test', () => {
     expect(() => poseidon.hash([1n, 1n + poseidon.F.p])).toThrow(
       `One or more inputs are not in the field: ${poseidon.F.p}`
     );
+
+    expect(() => poseidon.hash([1n, 1n - poseidon.F.p])).toThrow(
+      `One or more inputs are not in the field: ${poseidon.F.p}`
+    );
   });
 });

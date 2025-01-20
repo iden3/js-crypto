@@ -27,7 +27,7 @@ export class Poseidon {
       throw new Error('Invalid inputs');
     }
 
-    if (inputs.some((i) => i > F.p)) {
+    if (inputs.some((i) => i < 0 || i >= F.p)) {
       throw new Error(`One or more inputs are not in the field: ${F.p}`);
     }
 
