@@ -21,9 +21,14 @@ const pow5 = (a: bigint): bigint => F.mul(a, F.square(F.square(a)));
 // circomlibjs Poseidon bn128
 export class Poseidon {
   static F = F;
+
   static hash(inputs: bigint[]): bigint {
     if (!(inputs.length > 0 && inputs.length <= N_ROUNDS_P.length)) {
       throw new Error('Invalid inputs');
+    }
+
+    if (inputs.some((i) => i > F.p)) {
+      throw new Error(`One or more inputs are not in the field: ${F.p}`);
     }
 
     const t = inputs.length + 1;

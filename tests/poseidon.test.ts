@@ -129,4 +129,10 @@ describe('Poseidon test', () => {
       expect(res.toString(16)).toEqual(vector.expectedHash);
     }
   });
+
+  it('should throw error if input is not in the field', () => {
+    expect(() => poseidon.hash([1n, 1n + poseidon.F.p])).toThrow(
+      `One or more inputs are not in the field: ${poseidon.F.p}`
+    );
+  });
 });
