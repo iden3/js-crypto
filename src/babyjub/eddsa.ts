@@ -2,7 +2,7 @@ import { babyJub, BabyJub } from './babyjub';
 import { poseidon } from '../poseidon';
 import { F1Field, Scalar, utils } from '../ff';
 import { PublicKey, Signature } from './eddsa-keys';
-import { Blake512 } from '../blake';
+import { blake512 } from '@noble/hashes/blake1';
 
 export class Eddsa {
   babyJub: BabyJub = babyJub;
@@ -15,14 +15,14 @@ export class Eddsa {
   }
 
   static prv2pub(prv: Uint8Array): [bigint, bigint] {
-    const sBuff = this.pruneBuffer(new Blake512().update(prv).digest());
+    const sBuff = this.pruneBuffer(blake512(prv));
     const s = Scalar.fromRprLE(sBuff, 0, 32);
     const A = babyJub.mulPointEScalar(babyJub.Base8, Scalar.shr(s, 3n));
     return A;
   }
 
   static signPoseidon(prv: Uint8Array, msg: bigint) {
-    const h1 = new Blake512().update(prv).digest();
+    const h1 = blake512(prv);
     const sBuff = Eddsa.pruneBuffer(h1.slice(0, 32));
     const s = utils.leBuff2int(sBuff);
     const A = babyJub.mulPointEScalar(babyJub.Base8, Scalar.shr(s, 3n));
@@ -33,7 +33,7 @@ export class Eddsa {
     composeBuff.set(h1.slice(32, 64), 0);
     composeBuff.set(msgBuff, 32);
 
-    const rBuff = new Blake512().update(composeBuff).digest();
+    const rBuff = blake512(composeBuff);
     let r = utils.leBuff2int(rBuff);
     const Fr = new F1Field(babyJub.subOrder);
     r = Fr.e(r) as bigint;

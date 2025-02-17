@@ -1,7 +1,7 @@
 import { babyJub } from './babyjub';
 import { Eddsa, eddsa } from './eddsa';
 import { Hex } from '../hex';
-import { Blake512 } from '../blake';
+import { blake512 } from '@noble/hashes/blake1';
 import { utils } from '../ff';
 
 export class Signature {
@@ -90,7 +90,7 @@ export class PrivateKey {
   }
 
   bigInt(): bigint {
-    const h1 = new Blake512().update(this._sk).digest();
+    const h1 = blake512(this._sk);
     const sBuff = Eddsa.pruneBuffer(h1.slice(0, 32));
     const s = utils.leBuff2int(sBuff);
     return s >> 3n;

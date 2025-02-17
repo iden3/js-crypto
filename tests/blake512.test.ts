@@ -1,4 +1,5 @@
-import { Hex, Blake512 } from '../src';
+import { Hex } from '../src';
+import { blake512 } from '@noble/hashes/blake1';
 
 describe('blake512 hash', () => {
   it('blake512', () => {
@@ -26,7 +27,7 @@ describe('blake512 hash', () => {
       '9a974fead2777a9f5f613801500c149715ad96498b4ffec126515a9a02351d8143b5835ec49d48374424cad271090357901b0e8e2050659d9e6f13a6d2aad9d2'
     );
 
-    const mH = Hex.encodeString(new Blake512().update(inp).digest());
+    const mH = Hex.encodeString(blake512(inp));
 
     expect(mH).toEqual(expectedHex);
   });

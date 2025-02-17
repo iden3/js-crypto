@@ -9,7 +9,7 @@ const baseConfig = {
   minify: true,
   sourcemap: true,
   platform: 'browser',
-  target: 'es2020',
+  target: 'es2022',
   outfile: 'dist/browser/esm/index.js',
   format: 'esm'
 };
