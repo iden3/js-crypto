@@ -1,7 +1,7 @@
 import { F1Field, Scalar, utils } from '../ff';
 import op from './poseidon-constants-opt.json';
 
-export const OPT = utils.unstringifyBigInts(op) as {
+export const OPT = utils.unStringifyBigInts(op) as {
   C: bigint[][];
   S: bigint[][];
   M: bigint[][][];

@@ -2,7 +2,7 @@ import { babyJub, BabyJub } from './babyjub';
 import { poseidon } from '../poseidon';
 import { F1Field, Scalar, utils } from '../ff';
 import { PublicKey, Signature } from './eddsa-keys';
-import { Blake512 } from '../blake';
+import { blake512 } from '@noble/hashes/blake1';
 
 export class Eddsa {
   babyJub: BabyJub = babyJub;
@@ -15,17 +15,17 @@ export class Eddsa {
   }
 
   static prv2pub(prv: Uint8Array): [bigint, bigint] {
-    const sBuff = this.pruneBuffer(new Blake512().update(prv).digest());
+    const sBuff = this.pruneBuffer(blake512(prv));
     const s = Scalar.fromRprLE(sBuff, 0, 32);
-    const A = babyJub.mulPointEscalar(babyJub.Base8, Scalar.shr(s, 3n));
+    const A = babyJub.mulPointEScalar(babyJub.Base8, Scalar.shr(s, 3n));
     return A;
   }
 
   static signPoseidon(prv: Uint8Array, msg: bigint) {
-    const h1 = new Blake512().update(prv).digest();
+    const h1 = blake512(prv);
     const sBuff = Eddsa.pruneBuffer(h1.slice(0, 32));
     const s = utils.leBuff2int(sBuff);
-    const A = babyJub.mulPointEscalar(babyJub.Base8, Scalar.shr(s, 3n));
+    const A = babyJub.mulPointEScalar(babyJub.Base8, Scalar.shr(s, 3n));
 
     const msgBuff = utils.leInt2Buff(msg, 32);
 
@@ -33,11 +33,11 @@ export class Eddsa {
     composeBuff.set(h1.slice(32, 64), 0);
     composeBuff.set(msgBuff, 32);
 
-    const rBuff = new Blake512().update(composeBuff).digest();
+    const rBuff = blake512(composeBuff);
     let r = utils.leBuff2int(rBuff);
     const Fr = new F1Field(babyJub.subOrder);
     r = Fr.e(r) as bigint;
-    const R8 = babyJub.mulPointEscalar(babyJub.Base8, r);
+    const R8 = babyJub.mulPointEScalar(babyJub.Base8, r);
     const hm = poseidon.hash([R8[0], R8[1], A[0], A[1], msg]);
     const S = Fr.add(r, Fr.mul(hm, s));
     return {
@@ -60,12 +60,12 @@ export class Eddsa {
     const hm = poseidon.hash([sig.R8[0], sig.R8[1], A[0], A[1], msg]);
     const hms = hm;
 
-    const Pleft = babyJub.mulPointEscalar(babyJub.Base8, sig.S);
-    let Pright = babyJub.mulPointEscalar(A, Scalar.mul(hms, 8n));
-    Pright = babyJub.addPoint(sig.R8, Pright);
+    const pLeft = babyJub.mulPointEScalar(babyJub.Base8, sig.S);
+    let pRight = babyJub.mulPointEScalar(A, Scalar.mul(hms, 8n));
+    pRight = babyJub.addPoint(sig.R8, pRight);
 
-    if (!babyJub.F.eq(Pleft[0], Pright[0])) return false;
-    if (!babyJub.F.eq(Pleft[1], Pright[1])) return false;
+    if (!babyJub.F.eq(pLeft[0], pRight[0])) return false;
+    if (!babyJub.F.eq(pLeft[1], pRight[1])) return false;
     return true;
   }
 

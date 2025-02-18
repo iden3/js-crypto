@@ -173,7 +173,7 @@ export const bor = (a: bigint, b: bigint): bigint => {
   return a | b;
 };
 
-export const bxor = (a: bigint, b: bigint): bigint => {
+export const bXor = (a: bigint, b: bigint): bigint => {
   return a ^ b;
 };
 

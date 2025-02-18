@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible"
-        content="IE=edge">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./dist/browser/umd/index.js"></script>
     <title>Test</title>
-</head>
+  </head>
 
-<body>
+  <body>
     Test browser
-</body>
-<script>
-    // Function to convert hex to base64
-    function base64FromHex(hex) {
-        hex = hex.replace(/^0x/, '');
-        hex = hex.length % 2 != 0 ? '0' + hex : hex;
-        const buffer = new Uint8Array(hex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-        return btoa(String.fromCharCode(...buffer));
-    }
-
-    const { poseidon, PrivateKey, Signature, utils, ffUtils, Hex } = IdenJsCrypto;
+  </body>
+  <script>
+    const { PrivateKey, Signature, utils, ffUtils, Hex } = IdenJsCrypto;
     const msgBuf = Hex.decodeString('000102030405060708090000');
     const msg = ffUtils.leBuff2int(msgBuf);
 
-    const skBuff = Hex.decodeString('0001020304050607080900010203040506070809000102030405060708090001');
+    const skBuff = Hex.decodeString(
+      '0001020304050607080900010203040506070809000102030405060708090001'
+    );
 
     const privateKey = new PrivateKey(skBuff);
 
@@ -38,12 +29,10 @@
 
     const signature = privateKey.signPoseidon(msg);
 
-
     const pSignature = signature.compress();
 
     const uSignature = Signature.newFromCompressed(pSignature);
 
     console.assert(pubKey.verifyPoseidon(msg, uSignature));
-</script>
-
+  </script>
 </html>

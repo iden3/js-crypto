@@ -49,16 +49,16 @@ export class BabyJub {
     const gamma = F.mul(a[1], b[0]);
     const delta = F.mul(F.sub(a[1], F.mul(this.A, a[0])), F.add(b[0], b[1]));
     const tau = F.mul(beta, gamma);
-    const dtau = F.mul(this.D, tau);
+    const dTau = F.mul(this.D, tau);
 
-    res[0] = F.div(F.add(beta, gamma), F.add(F.one, dtau));
+    res[0] = F.div(F.add(beta, gamma), F.add(F.one, dTau));
 
-    res[1] = F.div(F.add(delta, F.sub(F.mul(this.A, beta), gamma)), F.sub(F.one, dtau));
+    res[1] = F.div(F.add(delta, F.sub(F.mul(this.A, beta), gamma)), F.sub(F.one, dTau));
 
     return res as [bigint, bigint];
   }
 
-  mulPointEscalar(base: bigint[], e: bigint): [bigint, bigint] {
+  mulPointEScalar(base: bigint[], e: bigint): [bigint, bigint] {
     const F = this.F;
     let res: [bigint, bigint] = [F.e('0'), F.e('1')];
     let rem = e;
@@ -78,7 +78,7 @@ export class BabyJub {
   inSubgroup(P: bigint[]): boolean {
     const F = this.F;
     if (!this.inCurve(P)) return false;
-    const res = this.mulPointEscalar(P, this.subOrder);
+    const res = this.mulPointEScalar(P, this.subOrder);
     return F.isZero(res[0]) && F.eq(res[1], F.one);
   }
 

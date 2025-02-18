@@ -1,6 +1,8 @@
 import { babyJub } from './babyjub';
-import { eddsa } from './eddsa';
+import { Eddsa, eddsa } from './eddsa';
 import { Hex } from '../hex';
+import { blake512 } from '@noble/hashes/blake1';
+import { utils } from '../ff';
 
 export class Signature {
   R8: [bigint, bigint];
@@ -78,29 +80,36 @@ export class PublicKey {
 }
 
 export class PrivateKey {
-  sk: Uint8Array;
+  private _sk: Uint8Array;
 
   constructor(buf: Uint8Array) {
     if (buf.length !== 32) {
       throw new Error('buf must be 32 bytes');
     }
-    this.sk = buf;
+    this._sk = buf;
+  }
+
+  bigInt(): bigint {
+    const h1 = blake512(this._sk);
+    const sBuff = Eddsa.pruneBuffer(h1.slice(0, 32));
+    const s = utils.leBuff2int(sBuff);
+    return s >> 3n;
   }
 
   toString(): string {
-    return this.sk.toString();
+    return this._sk.toString();
   }
 
   hex(): string {
-    return Hex.encodeString(this.sk);
+    return Hex.encodeString(this._sk);
   }
 
   public(): PublicKey {
-    return new PublicKey(eddsa.prv2pub(this.sk));
+    return new PublicKey(eddsa.prv2pub(this._sk));
   }
 
   signPoseidon(msg: bigint): Signature {
-    const s = eddsa.signPoseidon(this.sk, msg);
+    const s = eddsa.signPoseidon(this._sk, msg);
     return new Signature(s.R8, s.S);
   }
 }

@@ -7,7 +7,7 @@ export class F1Field {
   zero: bigint;
   p: bigint;
   m: bigint;
-  negone: bigint;
+  negOne: bigint;
   two: bigint;
   half: bigint;
   bitLength: number;
@@ -30,7 +30,7 @@ export class F1Field {
     this.zero = BigInt(0);
     this.p = BigInt(p);
     this.m = Scalar.one;
-    this.negone = this.p - this.one;
+    this.negOne = this.p - this.one;
     this.two = BigInt(2);
     this.half = this.p >> this.one;
     this.bitLength = Scalar.bitLength(this.p);
@@ -42,16 +42,16 @@ export class F1Field {
     this.R = this.e(this.one << BigInt(this.n64 * 64));
     this.Ri = this.inv(this.R);
 
-    const e = this.negone >> this.one;
+    const e = this.negOne >> this.one;
     this.nqr = this.two;
     let r = this.pow(this.nqr, e);
-    while (!this.eq(r, this.negone)) {
+    while (!this.eq(r, this.negOne)) {
       this.nqr = this.nqr + this.one;
       r = this.pow(this.nqr, e);
     }
 
     this.s = 0;
-    this.t = this.negone;
+    this.t = this.negOne;
 
     while ((this.t & this.one) == this.zero) {
       this.s = this.s + 1;
@@ -60,6 +60,7 @@ export class F1Field {
 
     this.nqr_to_t = this.pow(this.nqr, this.t);
 
+    // eslint-disable-next-line @cspell/spellchecker
     tonelliShanks(this);
 
     this.shift = this.square(this.nqr);
@@ -74,9 +75,9 @@ export class F1Field {
       res = BigInt('0x' + a);
     }
     if (res < 0) {
-      let nres = -res;
-      if (nres >= this.p) nres = nres % this.p;
-      return this.p - nres;
+      let nRes = -res;
+      if (nRes >= this.p) nRes = nRes % this.p;
+      return this.p - nRes;
     } else {
       return res >= this.p ? res % this.p : res;
     }
@@ -147,7 +148,7 @@ export class F1Field {
     return this.mul(a, this.inv(b));
   }
 
-  idiv(a: bigint, b: bigint): bigint {
+  iDiv(a: bigint, b: bigint): bigint {
     if (!b) throw new Error('Division by zero');
     return a / b;
   }
@@ -158,11 +159,11 @@ export class F1Field {
     let t = this.zero;
     let r = this.p;
     let newt = this.one;
-    let newr = a % this.p;
-    while (newr) {
-      const q = r / newr;
+    let newR = a % this.p;
+    while (newR) {
+      const q = r / newR;
       [t, newt] = [newt, t - q * newt];
-      [r, newr] = [newr, r - q * newr];
+      [r, newR] = [newR, r - q * newR];
     }
     if (t < this.zero) t += this.p;
     return t;
@@ -190,12 +191,12 @@ export class F1Field {
     return res >= this.p ? res - this.p : res;
   }
 
-  bxor(a: bigint, b: bigint): bigint {
+  bXor(a: bigint, b: bigint): bigint {
     const res = (a ^ b) & this.mask;
     return res >= this.p ? res - this.p : res;
   }
 
-  bnot(a: bigint): bigint {
+  bNot(a: bigint): bigint {
     const res = a ^ this.mask;
     return res >= this.p ? res - this.p : res;
   }
@@ -240,7 +241,7 @@ export class F1Field {
     if (n == this.zero) return this.zero;
 
     // Test that have solution
-    const res = this.pow(n, this.negone >> this.one);
+    const res = this.pow(n, this.negOne >> this.one);
     if (res != this.one) return null;
 
     let m = this.s;
@@ -361,6 +362,7 @@ export class F1Field {
   sqrt_tm1d2!: bigint;
 }
 
+// eslint-disable-next-line @cspell/spellchecker
 function tonelliShanks(F: F1Field) {
   F.sqrt_q = Scalar.pow(F.p, F.m);
 
@@ -386,7 +388,7 @@ function tonelliShanks(F: F1Field) {
     if (F.isZero(a)) return F.zero;
     let w = F.pow(a, F.sqrt_tm1d2);
     const a0 = F.pow(F.mul(F.square(w), a), 2n ** (F.sqrt_s - Scalar.one));
-    if (F.eq(a0, F.negone)) return null;
+    if (F.eq(a0, F.negOne)) return null;
 
     let v = F.sqrt_s;
     let x = F.mul(a, w);

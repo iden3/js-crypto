@@ -1,5 +1,5 @@
-const esbuild = require('esbuild');
-const process = require('process');
+import { build } from 'esbuild';
+import { exit } from 'process';
 
 const globalName = 'IdenJsCrypto';
 const baseConfig = {
@@ -9,22 +9,18 @@ const baseConfig = {
   minify: true,
   sourcemap: true,
   platform: 'browser',
-  target: 'es2020',
+  target: 'es2022',
   outfile: 'dist/browser/esm/index.js',
   format: 'esm'
 };
 
-esbuild
-  .build({
-    ...baseConfig
-  })
-  .catch(() => process.exit(1));
+build({
+  ...baseConfig
+}).catch(() => exit(1));
 
-esbuild
-  .build({
-    ...baseConfig,
-    format: 'iife',
-    outfile: 'dist/browser/umd/index.js',
-    globalName
-  })
-  .catch(() => process.exit(1));
+build({
+  ...baseConfig,
+  format: 'iife',
+  outfile: 'dist/browser/umd/index.js',
+  globalName
+}).catch(() => exit(1));

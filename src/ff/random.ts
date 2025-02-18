@@ -15,7 +15,7 @@ export function getRandomBytes(length: number): Uint8Array {
   }
   // eslint-disable-next-line no-unused-labels
   NODE: {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const crypto = require('crypto');
     return crypto.randomBytes(length);
   }
