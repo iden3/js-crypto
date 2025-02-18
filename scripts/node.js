@@ -13,7 +13,7 @@ const baseConfig = {
   entryPoints: ['src/index.ts'],
   bundle: true,
   minify: false,
-  sourcemap: false,
+  sourcemap: true,
   platform: 'node',
   target: 'es2022',
   outfile: 'dist/node/esm/index.js',
