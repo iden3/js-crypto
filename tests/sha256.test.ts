@@ -1,8 +1,17 @@
-import { sha256 } from '../src/sha256';
+import { sha256 } from '../src/sha256-noble';
+import { Hash } from '../src/sha256';
 import { Hex } from '../src/hex';
 
 describe('SHA-256 Hashing', () => {
   const encoder = new TextEncoder();
+
+  function sha256Old(data: Uint8Array): Uint8Array {
+    const h = new Hash().update(data);
+    const digest = h.digest();
+    h.clean();
+    return digest;
+  }
+
   it('should correctly hash a string', () => {
     const suite = [
       {
@@ -25,6 +34,9 @@ describe('SHA-256 Hashing', () => {
     for (const { input, expectedHash } of suite) {
       const result = Hex.encodeString(sha256(encoder.encode(input)));
       expect(result).toEqual(expectedHash);
+
+      const resultOld = Hex.encodeString(sha256Old(encoder.encode(input)));
+      expect(resultOld).toEqual(expectedHash);
     }
   });
 
