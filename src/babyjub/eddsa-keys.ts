@@ -1,7 +1,7 @@
 import { babyJub } from './babyjub';
 import { Eddsa, eddsa } from './eddsa';
 import { Hex } from '../hex';
-import { blake512 } from '@noble/hashes/blake1';
+import { blake512 } from '@noble/hashes/blake1.js';
 import { utils } from '../ff';
 
 export class Signature {

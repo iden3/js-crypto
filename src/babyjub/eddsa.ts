@@ -2,7 +2,7 @@ import { babyJub, BabyJub } from './babyjub';
 import { poseidon } from '../poseidon';
 import { F1Field, Scalar, utils } from '../ff';
 import { PublicKey, Signature } from './eddsa-keys';
-import { blake512 } from '@noble/hashes/blake1';
+import { blake512 } from '@noble/hashes/blake1.js';
 
 export class Eddsa {
   babyJub: BabyJub = babyJub;
