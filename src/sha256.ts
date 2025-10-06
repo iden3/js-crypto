@@ -100,7 +100,9 @@ function hashBlocks(w: Int32Array, v: Int32Array, p: Uint8Array, pos: number, le
   return pos;
 }
 
-// Hash implements SHA256 hash algorithm.
+/**
+ * @deprecated Hash implementation of SHA256 has been replaced by noble-hashes SHA256.
+ */
 export class Hash {
   digestLength: number = digestLength;
   blockSize: number = blockSize;
@@ -242,11 +244,4 @@ export class Hash {
     this.finished = false;
     this.bufferLength = 0;
   }
-}
-
-export function sha256(data: Uint8Array): Uint8Array {
-  const h = new Hash().update(data);
-  const digest = h.digest();
-  h.clean();
-  return digest;
 }
