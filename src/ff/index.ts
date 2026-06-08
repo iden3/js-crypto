@@ -4,7 +4,3 @@ import * as Scalar from './scalar';
 import * as utils from './utils';
 
 export { F1Field, getRandomBytes, Scalar, utils };
-
-export function assert(value: never): never {
-  throw new Error(`Unexpected value: ${value}`);
-}
