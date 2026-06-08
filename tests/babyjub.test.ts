@@ -1,4 +1,5 @@
-import { Hex, PrivateKey, PublicKey, Signature, ffUtils } from '../src';
+import { describe, expect, it } from 'vitest';
+import { ffUtils, Hex, PrivateKey, PublicKey, Signature } from '../src';
 
 describe('eddsa keys(Private, Public, Signature)', () => {
   it('pub key hex compress & decompress', () => {

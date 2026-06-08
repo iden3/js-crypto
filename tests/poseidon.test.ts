@@ -1,5 +1,6 @@
-import { testVectors } from './test-vectors';
+import { describe, expect, it } from 'vitest';
 import { Hex, poseidon } from '../src';
+import { testVectors } from './test-vectors';
 
 function fromLittleEndian(bytes: Uint8Array): bigint {
   const n256 = BigInt(256);
@@ -27,7 +28,7 @@ function splitBytes(b: Uint8Array, chunkSize: number): Uint8Array[] {
   let currentLen = 0;
   let currentStart = 0;
   for (let i = 0; i < b.length; i++) {
-    if (currentLen == chunkSize) {
+    if (currentLen === chunkSize) {
       const chunk = b.slice(currentStart, i);
       chunks.push(chunk);
       currentLen = 0;

@@ -19,6 +19,7 @@ const F = new F1Field(
 const pow5 = (a: bigint): bigint => F.mul(a, F.square(F.square(a)));
 
 // circomlibjs Poseidon bn128
+// biome-ignore lint/complexity/noStaticOnlyClass: util class
 export class Poseidon {
   static F = F;
 
@@ -90,7 +91,7 @@ export class Poseidon {
     let hash!: bigint;
 
     let k = 0;
-    for (let i = 0; i < parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`); i += 1) {
+    for (let i = 0; i < parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`, 10); i += 1) {
       dirty = true;
       inputs[k] = utils.beBuff2int(msg.slice(SPONGE_CHUNK_SIZE * i, SPONGE_CHUNK_SIZE * (i + 1)));
       if (k === frameSize - 1) {
@@ -107,9 +108,11 @@ export class Poseidon {
       }
     }
 
-    if (msg.length % SPONGE_CHUNK_SIZE != 0) {
+    if (msg.length % SPONGE_CHUNK_SIZE !== 0) {
       const buff = new Uint8Array(SPONGE_CHUNK_SIZE);
-      const slice = msg.slice(parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`) * SPONGE_CHUNK_SIZE);
+      const slice = msg.slice(
+        parseInt(`${msg.length / SPONGE_CHUNK_SIZE}`, 10) * SPONGE_CHUNK_SIZE
+      );
       slice.forEach((v, idx) => {
         buff[idx] = v;
       });
@@ -142,7 +145,7 @@ export class Poseidon {
       dirty = true;
       frame[k] = inputs[i];
       if (k === frameSize - 1) {
-        hash = this.hash(frame);
+        hash = Poseidon.hash(frame);
         dirty = false;
         frame = new Array(frameSize).fill(BigInt(0));
         frame[0] = hash;
@@ -154,7 +157,7 @@ export class Poseidon {
 
     if (dirty) {
       // we haven't hashed something in the main sponge loop and need to do hash here
-      hash = this.hash(frame);
+      hash = Poseidon.hash(frame);
     }
 
     if (!hash) {

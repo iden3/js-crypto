@@ -1,5 +1,5 @@
-import { Hex } from '../src';
 import { blake512 } from '@noble/hashes/blake1.js';
+import { Hex } from '../src';
 
 describe('blake512 hash', () => {
   it('blake512', () => {

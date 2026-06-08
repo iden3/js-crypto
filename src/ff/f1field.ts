@@ -1,5 +1,5 @@
-import * as Scalar from './scalar';
 import { getRandomBytes } from './random';
+import * as Scalar from './scalar';
 
 export class F1Field {
   type: string;
@@ -53,14 +53,13 @@ export class F1Field {
     this.s = 0;
     this.t = this.negOne;
 
-    while ((this.t & this.one) == this.zero) {
+    while ((this.t & this.one) === this.zero) {
       this.s = this.s + 1;
       this.t = this.t >> this.one;
     }
 
     this.nqr_to_t = this.pow(this.nqr, this.t);
 
-    // eslint-disable-next-line @cspell/spellchecker
     tonelliShanks(this);
 
     this.shift = this.square(this.nqr);
@@ -71,8 +70,8 @@ export class F1Field {
     let res!: bigint;
     if (!b) {
       res = BigInt(a);
-    } else if (b == BigInt(16)) {
-      res = BigInt('0x' + a);
+    } else if (b === BigInt(16)) {
+      res = BigInt(`0x${a}`);
     }
     if (res < 0) {
       let nRes = -res;
@@ -113,11 +112,11 @@ export class F1Field {
   }
 
   eq(a: bigint, b: bigint): boolean {
-    return a == b;
+    return a === b;
   }
 
   neq(a: bigint, b: bigint): boolean {
-    return a != b;
+    return a !== b;
   }
 
   lt(a: bigint, b: bigint): boolean {
@@ -238,21 +237,21 @@ export class F1Field {
   }
 
   sqrt_old(n: bigint): bigint | null {
-    if (n == this.zero) return this.zero;
+    if (n === this.zero) return this.zero;
 
     // Test that have solution
     const res = this.pow(n, this.negOne >> this.one);
-    if (res != this.one) return null;
+    if (res !== this.one) return null;
 
     let m = this.s;
     let c = this.nqr_to_t;
     let t = this.pow(n, this.t);
     let r = this.pow(n, this.add(this.t, this.one) >> this.one);
 
-    while (t != this.one) {
+    while (t !== this.one) {
       let sq = this.square(t);
       let i = 1;
-      while (sq != this.one) {
+      while (sq !== this.one) {
         i++;
         sq = this.square(sq);
       }
@@ -295,10 +294,10 @@ export class F1Field {
 
   toString(a: bigint, base = 10) {
     base = base || 10;
-    let vs;
-    if (a > this.half && base == 10) {
+    let vs: string;
+    if (a > this.half && base === 10) {
       const v = this.p - a;
-      vs = '-' + v.toString(base);
+      vs = `-${v.toString(base)}`;
     } else {
       vs = a.toString(base);
     }
@@ -306,7 +305,7 @@ export class F1Field {
   }
 
   isZero(a: bigint) {
-    return a == this.zero;
+    return a === this.zero;
   }
 
   // Returns a buffer with Little Endian Representation
@@ -351,7 +350,7 @@ export class F1Field {
   }
 
   sqrt(a: bigint): bigint | null {
-    throw new Error('Not implemented sqrt for F1' + a);
+    throw new Error(`Not implemented sqrt for F1${a}`);
   }
 
   sqrt_e1!: bigint;
@@ -362,7 +361,6 @@ export class F1Field {
   sqrt_tm1d2!: bigint;
 }
 
-// eslint-disable-next-line @cspell/spellchecker
 function tonelliShanks(F: F1Field) {
   F.sqrt_q = Scalar.pow(F.p, F.m);
 
@@ -416,15 +414,15 @@ function tonelliShanks(F: F1Field) {
 }
 
 export function mulScalar(F: F1Field, base: bigint, e: bigint): bigint {
-  let res;
+  let res: bigint;
 
   if (Scalar.isZero(e)) return F.zero;
 
   const n = Scalar.naf(e);
 
-  if (n[n.length - 1] == 1) {
+  if (n[n.length - 1] === 1) {
     res = base;
-  } else if (n[n.length - 1] == -1) {
+  } else if (n[n.length - 1] === -1) {
     res = F.neg(base);
   } else {
     throw new Error('invalid NAF');
@@ -433,9 +431,9 @@ export function mulScalar(F: F1Field, base: bigint, e: bigint): bigint {
   for (let i = n.length - 2; i >= 0; i--) {
     res = F.double(res);
 
-    if (n[i] == 1) {
+    if (n[i] === 1) {
       res = F.add(res, base);
-    } else if (n[i] == -1) {
+    } else if (n[i] === -1) {
       res = F.sub(res, base);
     }
   }
@@ -448,7 +446,7 @@ export function exp(F: F1Field, base: bigint, e: bigint) {
 
   const n = Scalar.bits(e);
 
-  if (n.length == 0) return F.one;
+  if (n.length === 0) return F.one;
 
   let res = base;
 

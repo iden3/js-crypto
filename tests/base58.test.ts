@@ -1,5 +1,6 @@
-import { Hex } from '../src';
-import { base58ToBytes, base58FromBytes } from '../src/base58';
+import { describe, expect, it } from 'vitest';
+import { base58FromBytes, base58ToBytes, Hex } from '../src';
+
 describe('base58', () => {
   it('base58 to binary', () => {
     const inp = '6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV';
