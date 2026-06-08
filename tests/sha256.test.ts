@@ -1,6 +1,7 @@
-import { sha256 } from '../src/sha256-noble';
-import { Hash } from '../src/sha256';
+import { describe, expect, it } from 'vitest';
 import { Hex } from '../src/hex';
+import { Hash } from '../src/sha256';
+import { sha256 } from '../src/sha256-noble';
 
 describe('SHA-256 Hashing', () => {
   const encoder = new TextEncoder();

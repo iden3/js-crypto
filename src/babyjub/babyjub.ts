@@ -1,4 +1,4 @@
-import { Scalar, F1Field } from '../ff';
+import { F1Field, Scalar } from '../ff';
 
 // circomlibjs BabyJub
 export class BabyJub {

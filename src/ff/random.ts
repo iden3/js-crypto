@@ -13,12 +13,10 @@ export function getRandomBytes(length: number): Uint8Array {
     global.crypto.getRandomValues(randomValues);
     return randomValues;
   }
-  // eslint-disable-next-line no-unused-labels
-  NODE: {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const crypto = require('crypto');
+  try {
+    const crypto = require('node:crypto');
     return crypto.randomBytes(length);
+  } catch {
+    throw new Error('Random byte generation is not supported in this environment');
   }
-
-  throw new Error('Random byte generation is not supported in this environment');
 }

@@ -1,6 +1,10 @@
-import * as utils from './utils';
-import * as Scalar from './scalar';
 import { F1Field } from './f1field';
 import { getRandomBytes } from './random';
+import * as Scalar from './scalar';
+import * as utils from './utils';
 
-export { utils, Scalar, F1Field, getRandomBytes };
+export { F1Field, getRandomBytes, Scalar, utils };
+
+export function assert(value: never): never {
+  throw new Error(`Unexpected value: ${value}`);
+}

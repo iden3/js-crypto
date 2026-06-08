@@ -1,3 +1,4 @@
+// biome-ignore lint/complexity/noStaticOnlyClass: util class
 export class Hex {
   static readonly HEX_TABLE = '0123456789abcdef';
   static textEncoder = new TextEncoder();
@@ -43,7 +44,7 @@ export class Hex {
       dst[i] = (a << 4) | b;
       i++;
     }
-    if (src.length % 2 == 1) {
+    if (src.length % 2 === 1) {
       throw new Error('Invalid hex string');
     }
     return Uint8Array.from(dst);

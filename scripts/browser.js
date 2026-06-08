@@ -1,5 +1,5 @@
+import { exit } from 'node:process';
 import { build } from 'esbuild';
-import { exit } from 'process';
 
 const globalName = 'IdenJsCrypto';
 const baseConfig = {

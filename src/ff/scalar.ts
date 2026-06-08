@@ -4,10 +4,10 @@ export const fromString = (s: string, radix?: number): bigint => {
   if (!radix || radix === 10) {
     return BigInt(s);
   } else if (radix === 16) {
-    if (s.slice(0, 2) == '0x') {
+    if (s.slice(0, 2) === '0x') {
       return BigInt(s);
     } else {
-      return BigInt('0x' + s);
+      return BigInt(`0x${s}`);
     }
   }
 
@@ -50,7 +50,7 @@ export const shl = shiftLeft;
 export const shr = shiftRight;
 
 export const isOdd = (a: bigint): boolean => {
-  return (a & one) == one;
+  return (a & one) === one;
 };
 
 export const naf = (n: bigint): number[] => {
@@ -187,7 +187,7 @@ export const lor = (a: bigint, b: bigint): bigint => {
 
 // Returns a buffer with Little Endian Representation
 export const toRprLE = (buff: Uint8Array, o: number, e: bigint, n8: number): void => {
-  const s = '0000000' + e.toString(16);
+  const s = `0000000${e.toString(16)}`;
   const v = new Uint32Array(buff.buffer, buff.byteOffset + o, n8 / 4);
   const l = (((s.length - 7) * 4 - 1) >> 5) + 1; // Number of 32bit words;
   for (let i = 0; i < l; i++)
@@ -199,7 +199,7 @@ export const toRprLE = (buff: Uint8Array, o: number, e: bigint, n8: number): voi
 
 // Returns a buffer with Big Endian Representation
 export const toRprBE = (buff: Uint8Array, o: number, e: bigint, n8: number): void => {
-  const s = '0000000' + e.toString(16);
+  const s = `0000000${e.toString(16)}`;
   const v = new DataView(buff.buffer, buff.byteOffset + o, n8);
   const l = (((s.length - 7) * 4 - 1) >> 5) + 1; // Number of 32bit words;
   for (let i = 0; i < l; i++)
@@ -219,7 +219,9 @@ export const fromRprLE = (buff: Uint8Array, o: number, n8?: number): bigint => {
   o = o || 0;
   const v = new Uint32Array(buff.buffer, buff.byteOffset + o, n8 / 4);
   const a = new Array(n8 / 4);
-  v.forEach((ch, i) => (a[a.length - i - 1] = ch.toString(16).padStart(8, '0')));
+  v.forEach((ch, i) => {
+    a[a.length - i - 1] = ch.toString(16).padStart(8, '0');
+  });
   return fromString(a.join(''), 16);
 };
 
@@ -238,6 +240,7 @@ export const fromRprBE = (buff: Uint8Array, o: number, n8: number): bigint => {
   return fromString(a.join(''), 16);
 };
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: part of the Scalar namespace API, mirrors ffjavascript
 export const toString = (a: bigint, radix = 10): string => {
   return a.toString(radix);
 };

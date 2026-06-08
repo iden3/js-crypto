@@ -3,7 +3,7 @@ import * as Scalar from './scalar';
 export function unStringifyBigInts(o: unknown): unknown {
   if (Array.isArray(o)) {
     return o.map(unStringifyBigInts);
-  } else if (typeof o == 'object') {
+  } else if (typeof o === 'object') {
     const res: { [k: string]: unknown } = {};
     for (const [key, val] of Object.entries(o as unknown as { [k: string]: unknown })) {
       res[key] = unStringifyBigInts(val);
@@ -88,7 +88,7 @@ export function leInt2Buff(n: bigint, len: number) {
   let r = n;
   if (typeof len === 'undefined') {
     len = Math.floor((Scalar.bitLength(n) - 1) / 8) + 1;
-    if (len == 0) len = 1;
+    if (len === 0) len = 1;
   }
   const buff = new Uint8Array(len);
   const buffV = new DataView(buff.buffer);
