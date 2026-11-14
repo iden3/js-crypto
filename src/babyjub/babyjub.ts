@@ -108,25 +108,37 @@ export class BabyJub {
     const F = this.F;
     let sign = false;
     const P: [bigint, bigint] = [BigInt(0), BigInt(0)];
-    if (buff[31] & 0x80) {
+    // Work on a copy so that the caller's buffer is not modified.
+    const yBuff = buff.slice(0, 32);
+    if (yBuff[31] & 0x80) {
       sign = true;
-      buff[31] = buff[31] & 0x7f;
+      yBuff[31] = yBuff[31] & 0x7f;
     }
-    P[1] = F.fromRprLE(buff, 0);
-    if (Scalar.gt(F.toObject(P[1]), this.p)) return null;
+    P[1] = F.fromRprLE(yBuff, 0);
+    // Reject non-canonical y coordinates (y >= p): y and y + p would otherwise be
+    // two encodings of the same point.
+    if (P[1] >= this.p) return null;
 
     const y2 = F.square(P[1]);
 
     const x2 = F.div(F.sub(F.one, y2), F.sub(this.A, F.mul(this.D, y2)));
 
-    const x2h = F.exp(x2, BigInt(F.half));
-    if (!F.eq(F.one, x2h)) return null;
+    let x: bigint;
+    if (F.isZero(x2)) {
+      // x = 0, e.g. the identity (0, 1). There is no negative zero, so a set sign
+      // bit would be a second encoding of the same point.
+      if (sign) return null;
+      x = F.zero;
+    } else {
+      const x2h = F.exp(x2, BigInt(F.half));
+      if (!F.eq(F.one, x2h)) return null;
 
-    let x = F.sqrt(x2);
+      const root = F.sqrt(x2);
 
-    if (x == null) return null;
+      if (root == null) return null;
 
-    if (sign) x = F.neg(x);
+      x = sign ? F.neg(root) : root;
+    }
 
     P[0] = BigInt(x);
 
