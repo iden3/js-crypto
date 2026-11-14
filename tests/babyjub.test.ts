@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ffUtils, Hex, PrivateKey, PublicKey, Signature } from '../src';
+import { babyJub, ffUtils, Hex, PrivateKey, PublicKey, Signature } from '../src';
 
 describe('eddsa keys(Private, Public, Signature)', () => {
   it('pub key hex compress & decompress', () => {
@@ -78,5 +78,44 @@ describe('eddsa keys(Private, Public, Signature)', () => {
     expect(privateKey.bigInt().toString()).toEqual(
       '3817885988578745122822765953778691808009834824977012551803821922027918401423'
     );
+  });
+});
+
+describe('babyJub.unpackPoint', () => {
+  const toLE = (n: bigint) => {
+    const b = new Uint8Array(32);
+    for (let i = 0; i < 32; i++) {
+      b[i] = Number(n & 255n);
+      n >>= 8n;
+    }
+    return b;
+  };
+
+  it('does not modify the buffer passed to it', () => {
+    const pub = new PrivateKey(new Uint8Array(32).fill(7)).public();
+    const buf = pub.compress();
+    const copy = buf.slice();
+
+    const p1 = PublicKey.newFromCompressed(buf);
+    expect(buf).toEqual(copy);
+
+    const p2 = PublicKey.newFromCompressed(buf);
+    expect(p2.p).toEqual(p1.p);
+    expect(p1.p).toEqual(pub.p);
+  });
+
+  it('rejects a non-canonical y coordinate (y >= p)', () => {
+    // y = 0 is on the curve, y = p and y = p + 1 would decode to the points with y = 0 and y = 1
+    expect(babyJub.unpackPoint(toLE(0n))).not.toBeNull();
+    expect(babyJub.unpackPoint(toLE(babyJub.p))).toBeNull();
+    expect(babyJub.unpackPoint(toLE(babyJub.p + 1n))).toBeNull();
+  });
+
+  it('unpacks the identity and rejects it with the sign bit set', () => {
+    const buf = babyJub.packPoint([0n, 1n]);
+    expect(babyJub.unpackPoint(buf)).toEqual([0n, 1n]);
+
+    buf[31] |= 0x80;
+    expect(babyJub.unpackPoint(buf)).toBeNull();
   });
 });
